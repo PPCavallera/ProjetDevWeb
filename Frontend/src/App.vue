@@ -1,27 +1,28 @@
-<script setup>
-import HelloWorld from "./components/HelloWorld.vue";
-import TheWelcome from "./components/TheWelcome.vue";
-</script>
+
 
 <template>
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="./assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
   </header>
 
   <main>
-    <TheWelcome />
+    <button v-on:click.prevent="test" type="input">test api</button>
   </main>
 </template>
+<script>
+export default {
+  methods: {
+    test: function (event) {
+      fetch('/api/test',
+        {
+          method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => { console.log(data) })
+    }
+  },
+
+}
+</script>
 
 <style scoped>
 header {
