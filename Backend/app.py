@@ -5,9 +5,10 @@ app = Flask(__name__)
 app.config['TEMPLATE_AUTO_RELOAD'] = True
 
 
-@app.route('/api/test')
+@app.route('/api/response')
 def test():
-    return {"test": 'test'}
+    print(request.args.get('question'))
+    return "bite"
 
 
 if __name__ == '__main__':
