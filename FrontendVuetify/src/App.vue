@@ -17,10 +17,10 @@
 <script>
 import SideBar from './components/SideBar.vue'
 import ChatInterface from './components/ChatInterface.vue'
-
+import Auth from "../../FrontendVuetify/src/components/auth.vue";
 import Prompt from './components/Prompt.vue';
 export default {
-  components: { Prompt, SideBar, ChatInterface }
+  components: { Prompt, SideBar, ChatInterface, Auth }
 }
 </script>
 <style scoped>
