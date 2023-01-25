@@ -19,17 +19,22 @@ export default {
 }
 </script>
 <style scoped>
-.element {
+/* .element {
     display: flex;
     flex-direction: column;
-    width: 100vh;
-}
-.Q{
+    margin-left: 15vh;
+    margin-right: 15vh;
+    width:7 0%;
+} */
+.Q {
     display: flex;
     justify-content: flex-end;
+    padding: 15px;
 }
-.A{
+
+.A {
     display: flex;
     justify-content: flex-start;
+    padding: 15px;
 }
 </style>

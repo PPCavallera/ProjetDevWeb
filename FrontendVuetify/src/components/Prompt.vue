@@ -1,8 +1,11 @@
 <template>
-    <form id='prompter'>
-        <input type="text" id="question" name="question">
-        <button v-on:click.prevent="getResponse" type="submit">Test</button>
-    </form>
+    <v-form>
+        <v-text-field id="question" class="principalPrompter">
+            <img width="24" height="24" src="@/assets/send.png">
+        </v-text-field>
+        <button class="sendButton" v-on:click.prevent="getResponse" type="submit"></button>
+
+    </v-form>
 </template>
 <script>
 import { mapWritableState } from 'pinia';
@@ -29,5 +32,8 @@ export default {
 }
 </script>
 <style>
-
+.sendButton{
+    width: 0;
+    height: 0;
+}
 </style>
