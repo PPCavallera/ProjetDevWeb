@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, request
 import pandas as pd
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ app.config['TEMPLATE_AUTO_RELOAD'] = True
 @app.route('/api/response')
 def test():
     print(request.args.get('question'))
-    return "bite"
+    return "test réponse"
 
 
 if __name__ == '__main__':

@@ -22,14 +22,6 @@ import SideBar from "./components/SideBar.vue"
 
 export default {
   methods: {
-    test: function (event) {
-      fetch('/api/test',
-        {
-          method: "GET"
-        })
-        .then(response => response.json())
-        .then(data => { console.log(data) })
-    }
   },
   components: { Prompt, ChatInterface, SideBar }
 }
@@ -44,12 +36,12 @@ main {
 }
 
 article {
-  flex: 70vh;
+  flex: 100vh;
 }
 
 aside {
   display: flex;
-  flex: 7vh;
+  width: 240px;
   /* background-color: #aaa; */
 }
 

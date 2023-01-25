@@ -22,9 +22,9 @@ export default {
     background-color: rgb(37, 61, 48);
     position: sticky;
     flex: 1;
-    height: 100vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
-    width: 120px;
+    width: 100vh;
 }
 </style>

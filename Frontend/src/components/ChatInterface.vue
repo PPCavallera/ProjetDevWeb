@@ -1,17 +1,23 @@
 <template>
     <div id="mainInterface">
-
+        <QAContainer></QAContainer>
     </div>
 </template>
 <script>
-export default {
-    props: ["question", "answers"]
+import QAContainer from './ChatInterfaceComponents/QAContainer.vue';
 
-}</script>
+export default {
+    props: ["question", "answers"],
+    components: { QAContainer }
+}
+</script>
 <style>
 #mainInterface {
-    background-color: blue;
+    background-color: rgb(44, 44, 44);
     display: flex;
-    flex: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    text-align: center;
+    height: 90vh;
 }
 </style>
