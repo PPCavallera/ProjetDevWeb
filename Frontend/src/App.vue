@@ -1,25 +1,17 @@
-
-
 <template>
-  <header>
-  </header>
-
   <main>
-    <button v-on:click.prevent="test" type="input">test api</button>
+    <Auth />
   </main>
 </template>
+
 <script>
-export default {
+import Auth from "./components/auth.vue";
+export default{
   methods: {
-    test: function (event) {
-      fetch('/api/test',
-        {
-          method: "GET"
-        })
-        .then(response => response.json())
-        .then(data => { console.log(data) })
-    }
   },
+  components: {
+    Auth
+  }
 
 }
 </script>
