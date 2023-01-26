@@ -31,9 +31,9 @@ export default {
                 .then(response => response.json())
                 .then(data => {
                     this.$emit("isConnected", data["isConnected"]);
+                    console.log(data);
                     if (data["isConnected"] == true) {
                         this.$emit("user", data["user"]);
-                        console.log(data);
                     }
                     this.message = data["message"];
                 });

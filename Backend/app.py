@@ -1,16 +1,20 @@
-from flask import Flask, request, session
+from flask import Flask, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from flask_session import Session
+ 
 app = Flask(__name__)
+# creates SQLALCHEMY object
+
 # database name
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ChatIDA.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = '32ae27c05edc697a862620724f676cbb0f4957e84e3ae4409a3228233b3e615a'
-# creates SQLALCHEMY object
+app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_TYPE"] = "sqlalchemy"
 db = SQLAlchemy(app)
-
+Session(app)
 
 @app.route('/api/response')
 def test():
@@ -30,9 +34,8 @@ def login():
     if user is None:
         return {"message": "User does not exist"}, 404
     if check_password_hash(user.password, auth["password"]):
-        session["logged_in"] = {"is_logged_in": True, "email": user.email}
-        # return session["logged_in"]
-        return {"isConnected": True, "user": user.email, "message": "Success"}, 200
+        session["name"] = user.email
+        return {"isConnected": True}
     else:
         return {"message": "Incorrect password"}, 401
 
