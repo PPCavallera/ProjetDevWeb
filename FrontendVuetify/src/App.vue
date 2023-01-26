@@ -1,17 +1,20 @@
 <template>
-  <header></header>
-  <main>
-    <aside>
-      <SideBar />
-    </aside>
-    <article>
-      <ChatInterface />
-      <div class="prompter">
-        <Prompt />
-      </div>
-    </article>
-  </main>
-  <footer></footer>
+  <Auth v-if="!isConnected" v-on:isConnected="changeConnected"/>
+  <div v-if="isConnected">
+    <header></header>
+    <main>
+      <aside>
+        <SideBar />
+      </aside>
+      <article>
+        <ChatInterface />
+        <div class="prompter">
+          <Prompt />
+        </div>
+      </article>
+    </main>
+    <footer></footer>
+  </div>
 </template>
 
 <script>
@@ -20,6 +23,16 @@ import ChatInterface from './components/ChatInterface.vue'
 import Auth from "../../FrontendVuetify/src/components/auth.vue";
 import Prompt from './components/Prompt.vue';
 export default {
+  data() {
+    return {
+      isConnected: false
+    };
+  },
+  methods: {
+    changeConnected(param){
+      this.isConnected = param;
+    }
+  },
   components: { Prompt, SideBar, ChatInterface, Auth }
 }
 </script>

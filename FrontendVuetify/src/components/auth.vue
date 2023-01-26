@@ -2,11 +2,12 @@
     <div class="box">
         <h1>Se connecter</h1>
         <form @submit.prevent="login">
-            <input v-model="email" placeholder="Email" required>
+            <input v-model="email" placeholder="Email" required type="email">
             <input v-model="password" type="password" placeholder="Mot de passe" required>
             <input type="submit" value="Submit">
         </form>
-        <span>Pas encore de compte ? <a href="/register">S'inscrire</a> </span>
+        <span>Pas encore de compte ? <a @click="register">S'inscrire</a> </span>
+        <h1>{{ message }}</h1>
     </div>
 </template>
 
@@ -16,7 +17,8 @@ export default {
     data() {
         return {
             password: "",
-            email: ""
+            email: "",
+            message: ""
         };
     },
     methods: {
@@ -24,14 +26,42 @@ export default {
             fetch("/login", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({email: this.email, password: this.password })
+                body: JSON.stringify({ email: this.email, password: this.password })
             })
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
-                    console.log(data);
+                    this.$emit("isConnected", data["isConnected"]);
+                    if (data["isConnected"] == true) {
+                        this.$emit("user", data["user"]);
+                        console.log(data);
+                    }
+                    this.message = data["message"];
+                });
+        },
+
+        register() {
+            fetch("/register", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: this.email, password: this.password })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.message = data["message"];
                 });
         }
 
     }
 };
 </script>
+
+<style scoped>
+a {
+    color: blue;
+    text-decoration: underline;
+}
+
+a:hover {
+    cursor: pointer;
+}
+</style>
