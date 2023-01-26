@@ -12,6 +12,10 @@ app.secret_key = '32ae27c05edc697a862620724f676cbb0f4957e84e3ae4409a3228233b3e61
 db = SQLAlchemy(app)
 
 
+@app_conv.route('/api/conversations')
+def getConversations():
+    return {"results": [{"convName": "Conv1"}, {"convName": "Conv2"}, {"convName": "Conv3"}]}
+
 @app.route('/api/response')
 def test():
     print(request.args.get('question'))
