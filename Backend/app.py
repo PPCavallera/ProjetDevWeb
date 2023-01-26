@@ -12,10 +12,6 @@ app.secret_key = '32ae27c05edc697a862620724f676cbb0f4957e84e3ae4409a3228233b3e61
 db = SQLAlchemy(app)
 
 
-@app_conv.route('/api/conversations')
-def getConversations():
-    return {"results": [{"convName": "Conv1"}, {"convName": "Conv2"}, {"convName": "Conv3"}]}
-
 @app.route('/api/response')
 def test():
     print(request.args.get('question'))
@@ -26,6 +22,41 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
+
+class Conversation(db.Model):
+    conv_id = db.Column(db.Integer, primary_key=True)
+    conv_name = db.Column(db.String(120))
+    user_id = db.Column(db.Integer)
+
+class Message(db.Model):
+    mess_id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(1027))
+    position = db.Column(db.Integer)
+    conv_id = db.Column(db.Integer)
+
+
+@app.route('/api/conversations')
+def getConversations():
+    convs = Conversation.query.all()
+    res = {}
+    res['results'] = []
+    for c in convs:
+        conv_dict = {}
+        conv_dict['conv_id'] = c.conv_id
+        conv_dict['conv_name'] = c.conv_name
+        # messages = Message.query.filter_by(conv_id=c.conv_id)        
+        # questions = []
+        # answers = []
+        # for m in messages:
+        #     msg_dict = {}
+        #     msg_dict['mess_id'] = m.mess_id
+        #     msg_dict['content'] = m.content
+        #     msg_dict['position'] = m.position
+        #     questions.append(msg_dict) if m.position % 2 != 0 else answers.append(msg_dict)
+        # conv_dict['question'] = questions
+        # conv_dict['answers'] = answers
+        res['results'].append(conv_dict)
+    return res
 
 @app.route("/login", methods=['POST'])
 def login():

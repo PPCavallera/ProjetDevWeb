@@ -4,7 +4,6 @@
             <img width="24" height="24" src="@/assets/send.png">
         </v-text-field>
         <button class="sendButton" v-on:click.prevent="getResponse" type="submit"></button>
-
     </v-form>
 </template>
 <script>

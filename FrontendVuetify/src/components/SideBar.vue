@@ -22,7 +22,7 @@ export default {
                 console.log(data.results);
                 for (let res of data.results) {
                     console.log(res);
-                    this.convName.push(res.convName);
+                    this.convName.push(res.conv_name);
                 }
             });
     },

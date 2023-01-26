@@ -13,6 +13,8 @@
 
 
 <script>
+import { mapWritableState } from 'pinia';
+import { UserStore } from '@/stores/User.store';
 export default {
     data() {
         return {
@@ -20,6 +22,10 @@ export default {
             email: "",
             message: ""
         };
+    },
+    computed:{
+        ...mapWritableState(UserStore, ["isConnected", "user"]),
+
     },
     methods: {
         login() {
@@ -30,10 +36,11 @@ export default {
             })
                 .then(response => response.json())
                 .then(data => {
-                    this.$emit("isConnected", data["isConnected"]);
+                    this.isConnected = data["isConnected"];
                     if (data["isConnected"] == true) {
-                        this.$emit("user", data["user"]);
+                        this.user = data["user"];
                         console.log(data);
+                        console.log(this.isConnected);
                     }
                     this.message = data["message"];
                 });
