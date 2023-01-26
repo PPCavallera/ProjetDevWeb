@@ -1,5 +1,5 @@
 <template>
-  <Auth v-if="!isConnected" v-on:isConnected="changeConnected"/>
+  <Auth v-if="!isConnected"/>
   <div v-if="isConnected">
     <header></header>
     <main>
@@ -22,17 +22,22 @@ import SideBar from './components/SideBar.vue'
 import ChatInterface from './components/ChatInterface.vue'
 import Auth from "../../FrontendVuetify/src/components/auth.vue";
 import Prompt from './components/Prompt.vue';
+import { UserStore } from './stores/User.store';
+import { mapState } from 'pinia';
 export default {
   data() {
     return {
-      isConnected: false
+      // isConnected: false
     };
   },
-  methods: {
-    changeConnected(param){
-      this.isConnected = param;
-    }
+  computed:{
+    ...mapState(UserStore, ['isConnected', 'user'])
   },
+  // methods: {
+  //   changeConnected(param){
+  //     this.isConnected = param;
+  //   }
+  // },
   components: { Prompt, SideBar, ChatInterface, Auth }
 }
 </script>

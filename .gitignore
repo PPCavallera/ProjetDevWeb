@@ -3,3 +3,4 @@ node_modules/
 package-lock.json
 dataset.csv
 dist/
+__pycache__

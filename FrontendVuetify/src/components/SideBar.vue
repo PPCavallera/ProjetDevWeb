@@ -10,17 +10,31 @@ import SideBarElements from "./SideBarElements.vue"
 export default {
     data() {
         return {
-            convName: ["name1", "name2", "name3"]
+            convName: []
         }
     },
+    created() {
+        fetch("/api/conversations",
+            { method: "GET" })
+            .then(response => response.json())
+            .then(data => {
+
+                console.log(data.results);
+                for (let res of data.results) {
+                    console.log(res);
+                    this.convName.push(res.conv_name);
+                }
+            });
+    },
+
     components: {
         SideBarElements
     }
 }
 </script>
 <style scoped>
-.newConv{
-    width:220px;
+.newConv {
+    width: 220px;
     font-size: larger;
     margin-left: 15px;
     margin-right: 15px;
