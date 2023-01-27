@@ -1,13 +1,22 @@
 <template>
-    <v-navigation-drawer absolute permanent left>
+    <v-navigation-drawer permanent left app>
         <template v-slot:prepend>
             <v-list-item>
-                <v-list-item-title>{{ this.user }}</v-list-item-title>
-                <v-list-item link @click="logout">Se déconnecter</v-list-item>
+                <v-list-item-title :style="{
+                    'text-align': 'center'}">{{ this.user }}</v-list-item-title>
             </v-list-item>
         </template>
+        <v-divider></v-divider>
         <v-btn class="newConv">+</v-btn>
         <SideBarElements v-for="conv in convName" v-bind:name="conv"></SideBarElements>
+        <template v-slot:append>
+            <v-divider></v-divider>
+            <div class="pa-2">
+                <v-btn block @click="logout">
+                    Se déconnecter
+                </v-btn>
+            </div>
+        </template>
     </v-navigation-drawer>
 </template>
 

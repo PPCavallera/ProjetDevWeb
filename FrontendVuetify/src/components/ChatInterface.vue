@@ -1,8 +1,6 @@
 <template>
-    <div class="mainContainer">
-        <QAElement v-for="qa in QA" v-bind:question="qa.question" v-bind:answer="qa.answer"/>
-        <!-- <Answer v-for="qa in QA" v-bind:answer="qa.answer" /> -->
-    </div>
+    <QAElement v-for="qa in QA" v-bind:question="qa.question" v-bind:answer="qa.answer" />
+    <!-- <Answer v-for="qa in QA" v-bind:answer="qa.answer" /> -->
 </template>
 <script>
 import QAElement from './ChatInterfaceComponents/QAElement.vue';

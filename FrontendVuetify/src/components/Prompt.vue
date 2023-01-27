@@ -1,10 +1,9 @@
 <template>
-    <v-form>
-        <v-text-field id="question" class="principalPrompter">
-            <img width="24" height="24" src="@/assets/send.png">
+    <v-app-bar location="bottom">
+        <v-text-field id="question" class="principalPrompter" prepend-icon="mdi-send" placeholder="Posez votre question"
+            @keydown.enter="getResponse">
         </v-text-field>
-        <button class="sendButton" v-on:click.prevent="getResponse" type="submit"></button>
-    </v-form>
+    </v-app-bar>
 </template>
 <script>
 import { mapWritableState } from 'pinia';
@@ -31,8 +30,5 @@ export default {
 }
 </script>
 <style scoped>
-.sendButton {
-    width: 0;
-    height: 0;
-}
+
 </style>

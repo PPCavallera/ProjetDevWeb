@@ -1,7 +1,6 @@
-from flask import Flask, request, session, redirect
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_session import Session
  
 app = Flask(__name__)
 # creates SQLALCHEMY object

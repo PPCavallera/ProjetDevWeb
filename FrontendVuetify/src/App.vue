@@ -3,8 +3,10 @@
     <Auth v-if="!isConnected" />
     <div v-if="isConnected">
       <SideBar />
-      <ChatInterface />
-      <Prompt />
+      <v-main fill-height>
+        <ChatInterface />
+        <Prompt />
+      </v-main>
     </div>
   </v-app>
 </template>
@@ -29,29 +31,5 @@ export default {
 }
 </script>
 <style scoped>
-main {
-  display: flex;
-  flex-direction: row;
-  /* flex: 100vh;
-  width: 100vh;
-  height: 100%; */
 
-}
-
-article {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-}
-
-aside {
-  display: flex;
-  flex-direction: column;
-  width: 250px;
-
-}
-
-header {
-  line-height: 1.5;
-}
 </style> 
