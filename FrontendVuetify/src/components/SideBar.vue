@@ -8,7 +8,7 @@
         </template>
         <v-divider></v-divider>
         <v-btn class="newConv">+</v-btn>
-        <SideBarElements v-for="conv in convName" v-bind:name="conv"></SideBarElements>
+        <SideBarElements v-for="conv in convName" v-bind:id="conv.conv_id" v-bind:name="conv.conv_name"></SideBarElements>
         <template v-slot:append>
             <v-divider></v-divider>
             <div class="pa-2">
