@@ -1,10 +1,14 @@
 <template>
   <v-app>
     <Auth v-if="!isConnected" />
-    <div v-if="isConnected">
+    <div id="v-ifDiv" v-if="isConnected">
+      <aside>
       <SideBar />
+    </aside>
+    <article>
       <ChatInterface />
       <Prompt />
+    </article>
     </div>
   </v-app>
 </template>
@@ -29,7 +33,7 @@ export default {
 }
 </script>
 <style scoped>
-main {
+#v-ifDiv {
   display: flex;
   flex-direction: row;
   /* flex: 100vh;
