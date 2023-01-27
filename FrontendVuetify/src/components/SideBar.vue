@@ -27,18 +27,18 @@ import { UserStore } from '@/stores/User.store';
 export default {
     data() {
         return {
-            convName: ["test", "test"]
+            convName: []
         }
     },
     created() {
-        fetch("/api/conversations",
+        fetch("/api/conversations?user=" + this.user,
             { method: "GET" })
             .then(response => response.json())
             .then(data => {
                 console.log(data.results);
                 for (let res of data.results) {
                     console.log(res);
-                    this.convName.push(res.conv_name);
+                    this.convName.push({"conv_id":res.conv_id, "conv_name":res.conv_name});
                 }
             });
     },

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <Auth v-if="!isConnected" />
-    <div v-if="isConnected">
+    <div id="v-ifDiv" v-if="isConnected">
       <SideBar />
       <v-main fill-height>
         <ChatInterface />

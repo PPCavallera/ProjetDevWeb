@@ -6,7 +6,7 @@ CREATE TABLE user(
 
 CREATE TABLE conversation(
    conv_id INTEGER PRIMARY KEY,
-   conv_name TEXT NOT NULL,
+   conv_name TEXT NOT NULL UNIQUE,
    user_id INTEGER,
 
    FOREIGN KEY (user_id)
@@ -16,7 +16,6 @@ CREATE TABLE conversation(
 CREATE TABLE message(
    mess_id INTEGER PRIMARY KEY,
    content TEXT NOT NULL,
-   position INTEGER NOT NULL,
    conv_id INTEGER NOT NULL,
 
    FOREIGN KEY (conv_id)
