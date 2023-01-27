@@ -1,4 +1,10 @@
-CREATE TABLE message(
+CREATE TABLE user(
+   user_id INTEGER PRIMARY KEY,
+   username VARCHAR(50) NOT NULL UNIQUE,
+   password VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE conversation(
    conv_id INTEGER PRIMARY KEY,
    conv_name TEXT NOT NULL,
    user_id INTEGER,
@@ -10,7 +16,7 @@ CREATE TABLE message(
 CREATE TABLE message(
    mess_id INTEGER PRIMARY KEY,
    content TEXT NOT NULL,
-   position INTEGER NOT NULL
+   position INTEGER NOT NULL,
    conv_id INTEGER NOT NULL,
 
    FOREIGN KEY (conv_id)

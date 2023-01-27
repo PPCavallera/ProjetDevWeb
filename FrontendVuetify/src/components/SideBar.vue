@@ -1,16 +1,24 @@
 <template>
-    <div id="sidebar">
+    <v-navigation-drawer absolute permanent left>
+        <template v-slot:prepend>
+            <v-list-item>
+                <v-list-item-title>{{ this.user }}</v-list-item-title>
+                <v-list-item link @click="logout">Se déconnecter</v-list-item>
+            </v-list-item>
+        </template>
         <v-btn class="newConv">+</v-btn>
         <SideBarElements v-for="conv in convName" v-bind:name="conv"></SideBarElements>
-    </div>
+    </v-navigation-drawer>
 </template>
+
 <script>
 import SideBarElements from "./SideBarElements.vue"
-
+import { mapWritableState } from 'pinia';
+import { UserStore } from '@/stores/User.store';
 export default {
     data() {
         return {
-            convName: []
+            convName: ["test", "test"]
         }
     },
     created() {
@@ -18,7 +26,6 @@ export default {
             { method: "GET" })
             .then(response => response.json())
             .then(data => {
-
                 console.log(data.results);
                 for (let res of data.results) {
                     console.log(res);
@@ -26,7 +33,16 @@ export default {
                 }
             });
     },
+    computed: {
+        ...mapWritableState(UserStore, ["user"]),
 
+    },
+    methods: {
+        logout() {
+            localStorage.clear()
+            location.reload()
+        }
+    },
     components: {
         SideBarElements
     }

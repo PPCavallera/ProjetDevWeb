@@ -30,8 +30,8 @@ export default {
     },
 }
 </script>
-<style>
-.sendButton{
+<style scoped>
+.sendButton {
     width: 0;
     height: 0;
 }

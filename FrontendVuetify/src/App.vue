@@ -1,20 +1,12 @@
 <template>
-  <Auth v-if="!isConnected"/>
-  <div v-if="isConnected">
-    <header></header>
-    <main>
-      <aside>
-        <SideBar />
-      </aside>
-      <article>
-        <ChatInterface />
-        <div class="prompter">
-          <Prompt />
-        </div>
-      </article>
-    </main>
-    <footer></footer>
-  </div>
+  <v-app>
+    <Auth v-if="!isConnected" />
+    <div v-if="isConnected">
+      <SideBar />
+      <ChatInterface />
+      <Prompt />
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -27,17 +19,12 @@ import { mapState } from 'pinia';
 export default {
   data() {
     return {
-      // isConnected: false
+
     };
   },
-  computed:{
+  computed: {
     ...mapState(UserStore, ['isConnected', 'user'])
   },
-  // methods: {
-  //   changeConnected(param){
-  //     this.isConnected = param;
-  //   }
-  // },
   components: { Prompt, SideBar, ChatInterface, Auth }
 }
 </script>

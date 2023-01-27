@@ -1,14 +1,25 @@
 <template>
-    <div class="box">
-        <h1>Se connecter</h1>
-        <form @submit.prevent="login">
-            <input v-model="email" placeholder="Email" required type="email">
-            <input v-model="password" type="password" placeholder="Mot de passe" required>
-            <input type="submit" value="Submit">
-        </form>
-        <span>Pas encore de compte ? <a @click="register">S'inscrire</a> </span>
-        <h1>{{ message }}</h1>
-    </div>
+    <v-card width="400" class="mx-auto mt-5">
+        <v-card-title>
+            <h2>Connexion</h2>
+        </v-card-title>
+        <v-card-text>
+            <v-form>
+                <v-text-field v-model="username" label="Utilisateur" prepend-icon="mdi-account-circle" />
+                <v-text-field v-model="password" type="password" label="Password" prepend-icon="mdi-lock" />
+            </v-form>
+        </v-card-text>
+        <v-card-actions>
+            <v-btn color="success" @click="register">S'inscrire</v-btn>
+            <v-btn color="info" @click="login">Se connecter</v-btn>
+        </v-card-actions>
+    </v-card>
+    <v-snackbar v-model="snackbar">
+        {{ message }}
+            <v-btn color="pink" @click="snackbar = false">
+                Close
+            </v-btn>
+    </v-snackbar>
 </template>
 
 
@@ -19,43 +30,60 @@ export default {
     data() {
         return {
             password: "",
-            email: "",
-            message: ""
+            username: "",
+            message: "",
+            snackbar: false
         };
     },
-    computed:{
+    computed: {
         ...mapWritableState(UserStore, ["isConnected", "user"]),
 
     },
     methods: {
         login() {
-            fetch("/login", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: this.email, password: this.password })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    this.isConnected = data["isConnected"];
-                    if (data["isConnected"] == true) {
-                        this.user = data["user"];
-                        console.log(data);
-                        console.log(this.isConnected);
-                    }
-                    this.message = data["message"];
-                });
+            if (this.username == "" || this.password == "") {
+                this.message = "Required fields"
+                this.snackbar = true
+            }
+            else {
+                fetch("/login", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: this.username, password: this.password })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data["isConnected"]) {
+                            localStorage.isConnected = data["isConnected"]
+                            localStorage.user = data["user"]
+                            this.isConnected = data["isConnected"]
+                            this.user = data["user"]
+                        }
+                        else {
+                            this.message = data["message"]
+                            this.snackbar = true
+                        }
+                    });
+            }
         },
 
         register() {
-            fetch("/register", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: this.email, password: this.password })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    this.message = data["message"];
-                });
+            if (this.username == "" || this.password == "") {
+                this.message = "Required fields"
+                this.snackbar = true
+            }
+            else {
+                fetch("/register", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: this.username, password: this.password })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.message = data["message"]
+                        this.snackbar = true
+                    });
+            }
         }
 
     }

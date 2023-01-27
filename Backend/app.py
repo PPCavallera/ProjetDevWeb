@@ -10,11 +10,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ChatIDA.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config["TEMPLATES_AUTO_RELOAD"] = True
-app.secret_key = '32ae27c05edc697a862620724f676cbb0f4957e84e3ae4409a3228233b3e615a'
-app.config["SESSION_PERMANENT"] = True
-app.config["SESSION_TYPE"] = "sqlalchemy"
 db = SQLAlchemy(app)
-Session(app)
 
 @app.route('/api/response')
 def test():
@@ -23,9 +19,9 @@ def test():
 
 # Database ORMs
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(80), unique=False, nullable=False)
+    user_id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(40), unique=False, nullable=False)
 
 class Conversation(db.Model):
     conv_id = db.Column(db.Integer, primary_key=True)
@@ -65,22 +61,21 @@ def getConversations():
 @app.route("/login", methods=['POST'])
 def login():
     auth = request.get_json()
-    user = User.query.filter_by(email=auth['email']).first()
+    user = User.query.filter_by(username=auth['username']).first()
     if user is None:
         return {"message": "User does not exist"}, 404
     if check_password_hash(user.password, auth["password"]):
-        session["name"] = user.email
-        return {"isConnected": True}
+        return {"isConnected": True, "user": user.username}, 200
     else:
         return {"message": "Incorrect password"}, 401
 
 @app.route("/register", methods=['POST'])
 def register():
     user_data = request.get_json()
-    isExisting = User.query.filter_by(email=user_data['email']).first()
+    isExisting = User.query.filter_by(username=user_data['username']).first()
     if isExisting is None:
         password_hashed = generate_password_hash(user_data['password'])
-        new_user = User(email=user_data['email'], password=password_hashed)
+        new_user = User(username=user_data['username'], password=password_hashed)
         db.session.add(new_user)
         db.session.commit()
         return {"message": "User added successfully"}, 201
