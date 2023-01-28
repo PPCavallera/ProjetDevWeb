@@ -3,12 +3,15 @@
         <template v-slot:prepend>
             <v-list-item>
                 <v-list-item-title :style="{
-                    'text-align': 'center'}">{{ this.user }}</v-list-item-title>
+                    'text-align': 'center'
+                }">{{ this.user }}</v-list-item-title>
             </v-list-item>
         </template>
         <v-divider></v-divider>
-        <v-btn class="newConv">+</v-btn>
-        <SideBarElements v-for="conv in convName" v-bind:id="conv.conv_id" v-bind:name="conv.conv_name"></SideBarElements>
+        <v-btn class="newConv" @click="convDialog = true">+</v-btn>
+        <SideBarElements v-for="conv in convName" v-bind:id="conv.conv_id" v-bind:name="conv.conv_name"
+            v-on:delete="refreshConvList">
+        </SideBarElements>
         <template v-slot:append>
             <v-divider></v-divider>
             <div class="pa-2">
@@ -18,6 +21,24 @@
             </div>
         </template>
     </v-navigation-drawer>
+    <v-dialog v-model="convDialog" max-width="500px">
+        <v-card>
+            <v-card-title>
+                Enter the conversation name
+            </v-card-title>
+            <v-card-text>
+                <v-text-field v-model="newConvName" placeholder="Type Something" @keypress.enter="addConv" />
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="primary" text @click="addConv">
+                    Add
+                </v-btn>
+                <v-btn color="primary" text @click="convDialog = false">
+                    Close
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>
@@ -27,7 +48,9 @@ import { UserStore } from '@/stores/User.store';
 export default {
     data() {
         return {
-            convName: []
+            convName: [],
+            convDialog: false,
+            newConvName: ""
         }
     },
     created() {
@@ -35,10 +58,8 @@ export default {
             { method: "GET" })
             .then(response => response.json())
             .then(data => {
-                console.log(data.results);
                 for (let res of data.results) {
-                    console.log(res);
-                    this.convName.push({"conv_id":res.conv_id, "conv_name":res.conv_name});
+                    this.convName.push({ "conv_id": res.conv_id, "conv_name": res.conv_name });
                 }
             });
     },
@@ -50,6 +71,29 @@ export default {
         logout() {
             localStorage.clear()
             location.reload()
+        },
+
+        refreshConvList(id) {
+            for (let i = 0; i < this.convName.length; i++) {
+                if (this.convName[i].conv_id === id) {
+                    this.convName.splice(i, 1);
+                }
+                console.log(this.convName[0].conv_id)
+            }
+        },
+        addConv() {
+            if (this.newConvName != "") {
+                fetch("/api/conversations?user=" + this.user + "&conv_name=" + this.newConvName,
+                    {
+                        method: "POST"
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                            this.convName.push({ "conv_id": data.conv_id, "conv_name": data.conv_name });
+                       
+                    });
+                this.convDialog = false
+            }
         }
     },
     components: {

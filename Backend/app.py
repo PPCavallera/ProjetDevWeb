@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
- 
+
 app = Flask(__name__)
 # creates SQLALCHEMY object
 
@@ -51,34 +51,53 @@ def loadMessages():
     messages = Message.query.filter_by(conv_id=request.args.get('conv_id'))
     res_li = []
     if messages.count() > 0:
-        for i in range(0,messages.count()-1,2):
-            res_li.append({'question':messages[i].content, 'answer':messages[i+1].content})
+        for i in range(0, messages.count()-1, 2):
+            res_li.append(
+                {'question': messages[i].content, 'answer': messages[i+1].content})
     return {"results": res_li}
 
 
-@app.route('/api/conversations')
+@app.route('/api/conversations', methods=['GET', 'DELETE', 'POST'])
 def getConversations():
-    user = User.query.filter_by(username=request.args.get('user')).first()
-    convs = Conversation.query.filter_by(user_id=user.user_id)
-    res = {}
-    res['results'] = []
-    for c in convs:
-        conv_dict = {}
-        conv_dict['conv_id'] = c.conv_id
-        conv_dict['conv_name'] = c.conv_name
-        # messages = Message.query.filter_by(conv_id=c.conv_id)
-        # questions = []
-        # answers = []
-        # for m in messages:
-        #     msg_dict = {}
-        #     msg_dict['mess_id'] = m.mess_id
-        #     msg_dict['content'] = m.content
-        #     msg_dict['position'] = m.position
-        #     questions.append(msg_dict) if m.position % 2 != 0 else answers.append(msg_dict)
-        # conv_dict['question'] = questions
-        # conv_dict['answers'] = answers
-        res['results'].append(conv_dict)
-    return res
+    if request.method == 'GET':
+        user = User.query.filter_by(username=request.args.get('user')).first()
+        convs = Conversation.query.filter_by(user_id=user.user_id)
+        res = {}
+        res['results'] = []
+        for c in convs:
+            conv_dict = {}
+            conv_dict['conv_id'] = c.conv_id
+            conv_dict['conv_name'] = c.conv_name
+            # messages = Message.query.filter_by(conv_id=c.conv_id)
+            # questions = []
+            # answers = []
+            # for m in messages:
+            #     msg_dict = {}
+            #     msg_dict['mess_id'] = m.mess_id
+            #     msg_dict['content'] = m.content
+            #     msg_dict['position'] = m.position
+            #     questions.append(msg_dict) if m.position % 2 != 0 else answers.append(msg_dict)
+            # conv_dict['question'] = questions
+            # conv_dict['answers'] = answers
+            res['results'].append(conv_dict)
+        return res
+    if request.method == 'DELETE':
+        messages = Message.query.filter_by(conv_id=request.args.get('conv_id')).all()
+        convs = Conversation.query.filter_by(conv_id=request.args.get('conv_id')).all()
+        for m in messages:
+            db.session.delete(m)
+            db.session.commit()
+        for c in convs:
+            db.session.delete(c)
+            db.session.commit()
+        return {'message' : "Deleted Conversation"}
+    if request.method == 'POST':
+        user = User.query.filter_by(username=request.args.get('user')).first()
+        newConv = Conversation(conv_name=request.args.get('conv_name'), user_id=user.user_id)
+        db.session.add(newConv)
+        db.session.commit()
+        addedConv = Conversation.query.filter_by(conv_name=request.args.get('conv_name')).first()
+        return {'conv_id': addedConv.conv_id, 'conv_name': addedConv.conv_name}
 
 
 @app.route("/login", methods=['POST'])

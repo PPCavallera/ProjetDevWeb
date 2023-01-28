@@ -1,8 +1,7 @@
 <template>
     <v-app-bar location="bottom">
-        <v-text-field id="question" class="principalPrompter" prepend-icon="mdi-send" placeholder="Posez votre question"
-            @keydown.enter="getResponse">
-        </v-text-field>
+        <v-text-field id="question" placeholder="Type Something" @keypress.enter="getResponse" />
+        <v-btn icon class="ml-4" @click="getResponse"><v-icon>mdi-send</v-icon></v-btn>
     </v-app-bar>
 </template>
 <script>
