@@ -1,7 +1,7 @@
 <template>
     <div class="element">
         <div class="Q">
-            <Question v-bind:text="question"></Question>
+            <Question v-bind:id="question.id" v-bind:question="question.content"></Question>
         </div>
         <div class="A">
             <Answer v-bind:text="answer"></Answer>

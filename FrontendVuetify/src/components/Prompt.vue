@@ -20,10 +20,10 @@ export default {
 
                 fetch("/api/response?question=" + val + "&conv_id=" + this.conv_id,
                     { method: "GET" })
-                    .then(response => response.text())
+                    .then(response => response.json())
                     .then(data => {
-                        this.QA.push({ "question": val, "answer": data });
-                        console.log(data);
+                        this.QA.push({ "question": { "id": data.question_id, "content": val }, "answer": data.answer });
+                        console.log(data.answer);
                     });
                 document.getElementById("question").value = "";
             }
