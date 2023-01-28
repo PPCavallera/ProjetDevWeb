@@ -8,7 +8,7 @@ import torch
 
 model = BloomForCausalLM.from_pretrained("bigscience/bloom-560m")
 tokenizer = BloomTokenizerFast.from_pretrained("bigscience/bloom-560m")
-chosen_prompt = 2
+chosen_prompt = 0
 prompt = ["Travailleurs travailleuses on nous spolie, on nous ment", 
         "Je suis un chien déguisé en singe Je n’ai rien d’un humain", 
         "Montre en diamants, lunettes de soleil Sors les Kalash' comme à Marseille Ma question préférée : qu'est-ce j'vais faire de tout cet oseille ?"]
