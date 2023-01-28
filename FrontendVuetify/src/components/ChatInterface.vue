@@ -1,10 +1,10 @@
 <template>
+    <v-card width="800" text="Vous parlez à une IA, ses réponses n'engagent en rien les développeurs de l'application web." prepend-icon="mdi-alert">
+    </v-card>
     <QAElement v-for="qa in QA" v-bind:question="qa.question" v-bind:answer="qa.answer" />
-    <!-- <Answer v-for="qa in QA" v-bind:answer="qa.answer" /> -->
 </template>
 <script>
 import QAElement from './ChatInterfaceComponents/QAElement.vue';
-// import Answer from './ChatInterfaceComponents/Answer.vue';
 import { mapState } from 'pinia';
 import { QAStore } from '@/stores/QA.store';
 export default {

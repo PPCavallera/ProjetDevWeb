@@ -49,9 +49,8 @@ class Message(db.Model):
 def test():
     print(request.args.get('question'))
     print(request.args.get('conv_id'))
-    question = Message(content=request.args.get('question'),
-                       conv_id=request.args.get('conv_id'))
-    prompt_value = prompt[chosen_prompt] + " " + request.args.get('question')
+    
+    prompt_value = prompt[chosen_prompt] + " " + request.args.get('question')+" "
     inputs = tokenizer(prompt_value, return_tensors="pt")
     answer_str = tokenizer.decode(model.generate(inputs["input_ids"],
                        max_length=result_length, 
@@ -60,14 +59,20 @@ def test():
                        early_stopping=True
                       )[0])
     # print(prompt_value)
-    answer_str = answer_str[len(prompt_value):]
+    answer_str = answer_str[len(prompt_value):].strip()
     print(answer_str)
-    answer = Message(content=answer_str,
-                     conv_id=request.args.get('conv_id'))
-    db.session.add(question)
-    db.session.add(answer)
-    db.session.commit()
-    return answer_str
+    id = -1
+    if request.args.get('conv_id') != -1:
+        question = Message(content=request.args.get('question'),
+                        conv_id=request.args.get('conv_id'))
+        answer = Message(content=answer_str,
+                        conv_id=request.args.get('conv_id'))
+        db.session.add(question)
+        db.session.add(answer)       
+        db.session.commit()
+        qs = Message.query.filter_by(conv_id=request.args.get('conv_id'), content=request.args.get('question')).all()[-1]
+        id = qs.mess_id
+    return {"question_id" :id, "answer": answer_str}
 
 
 @app.route('/api/load_messages')
@@ -78,8 +83,25 @@ def loadMessages():
     if messages.count() > 0:
         for i in range(0, messages.count()-1, 2):
             res_li.append(
-                {'question': messages[i].content, 'answer': messages[i+1].content})
+                {'question': {"id": messages[i].mess_id, 'content':messages[i].content}, 'answer': messages[i+1].content})
     return {"results": res_li}
+
+
+@app.route('/api/deleteMsg', methods=['DELETE'])
+def waterfallDelete():
+    conv_id = request.args.get('conv_id')
+    q_id = request.args.get('q_id')
+    print(conv_id)
+    print(q_id)
+    print(type(q_id))
+    messages = Message.query.filter_by(conv_id=conv_id).all()
+    
+    for i, m in enumerate(messages):
+        if m.mess_id >= int(q_id):
+            db.session.delete(m)
+            db.session.commit()
+
+    return {'message' : "Deleted Conversation"}
 
 
 @app.route('/api/conversations', methods=['GET', 'DELETE', 'POST'])
@@ -93,17 +115,6 @@ def getConversations():
             conv_dict = {}
             conv_dict['conv_id'] = c.conv_id
             conv_dict['conv_name'] = c.conv_name
-            # messages = Message.query.filter_by(conv_id=c.conv_id)
-            # questions = []
-            # answers = []
-            # for m in messages:
-            #     msg_dict = {}
-            #     msg_dict['mess_id'] = m.mess_id
-            #     msg_dict['content'] = m.content
-            #     msg_dict['position'] = m.position
-            #     questions.append(msg_dict) if m.position % 2 != 0 else answers.append(msg_dict)
-            # conv_dict['question'] = questions
-            # conv_dict['answers'] = answers
             res['results'].append(conv_dict)
         return res
     if request.method == 'DELETE':
