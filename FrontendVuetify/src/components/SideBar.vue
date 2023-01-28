@@ -10,7 +10,7 @@
         <v-divider></v-divider>
         <v-btn class="newConv" @click="convDialog = true">+</v-btn>
         <SideBarElements v-for="conv in convName" v-bind:id="conv.conv_id" v-bind:name="conv.conv_name"
-            v-on:delete="refreshConvList">
+            v-on:delete="refreshConvListAfterDelete" v-on:update="refreshConvListAfterUpdate">
         </SideBarElements>
         <template v-slot:append>
             <v-divider></v-divider>
@@ -73,10 +73,18 @@ export default {
             location.reload()
         },
 
-        refreshConvList(id) {
+        refreshConvListAfterDelete(id) {
             for (let i = 0; i < this.convName.length; i++) {
                 if (this.convName[i].conv_id === id) {
                     this.convName.splice(i, 1);
+                }
+                console.log(this.convName[0].conv_id)
+            }
+        },
+        refreshConvListAfterUpdate(id, newConv_name) {
+            for (let i = 0; i < this.convName.length; i++) {
+                if (this.convName[i].conv_id === id) {
+                    this.convName[i].conv_name = newConv_name
                 }
                 console.log(this.convName[0].conv_id)
             }
@@ -89,13 +97,16 @@ export default {
                     })
                     .then(response => response.json())
                     .then(data => {
-                            this.convName.push({ "conv_id": data.conv_id, "conv_name": data.conv_name });
-                       
+                        this.convName.push({ "conv_id": data.conv_id, "conv_name": data.conv_name });
+
                     });
                 this.convDialog = false
+                this.newConvName = ""
             }
-        }
+        },
+
     },
+
     components: {
         SideBarElements
     }

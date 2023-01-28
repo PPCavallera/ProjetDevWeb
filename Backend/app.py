@@ -8,7 +8,7 @@ import torch
 
 model = BloomForCausalLM.from_pretrained("bigscience/bloom-560m")
 tokenizer = BloomTokenizerFast.from_pretrained("bigscience/bloom-560m")
-chosen_prompt = 0
+chosen_prompt = 2
 prompt = ["Travailleurs travailleuses on nous spolie, on nous ment", 
         "Je suis un chien déguisé en singe Je n’ai rien d’un humain", 
         "Montre en diamants, lunettes de soleil Sors les Kalash' comme à Marseille Ma question préférée : qu'est-ce j'vais faire de tout cet oseille ?"]
@@ -82,7 +82,7 @@ def loadMessages():
     return {"results": res_li}
 
 
-@app.route('/api/conversations', methods=['GET', 'DELETE', 'POST'])
+@app.route('/api/conversations', methods=['GET', 'DELETE', 'POST', "PUT"])
 def getConversations():
     if request.method == 'GET':
         user = User.query.filter_by(username=request.args.get('user')).first()
@@ -123,7 +123,11 @@ def getConversations():
         db.session.commit()
         addedConv = Conversation.query.filter_by(conv_name=request.args.get('conv_name')).first()
         return {'conv_id': addedConv.conv_id, 'conv_name': addedConv.conv_name}
-
+    if request.method == 'PUT':
+        convs = Conversation.query.filter_by(conv_id=request.args.get('conv_id')).first()
+        convs.conv_name = request.args.get('conv_name')
+        db.session.commit()
+        return {'message': "Updated Conversation"}
 
 @app.route("/login", methods=['POST'])
 def login():

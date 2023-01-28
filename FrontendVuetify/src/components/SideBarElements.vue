@@ -9,7 +9,7 @@
             </template>
             <v-list>
                 <v-list-item>
-                    <v-btn icon="mdi-pen"></v-btn>
+                    <v-btn icon="mdi-pen" @click="convDialog = true"></v-btn>
                     <v-btn icon="mdi-delete" @click="snackbar = true"></v-btn>
                 </v-list-item>
             </v-list>
@@ -25,6 +25,25 @@
             No
         </v-btn>
     </v-snackbar>
+
+    <v-dialog v-model="convDialog" max-width="500px">
+        <v-card>
+            <v-card-title>
+                Enter new conversation name
+            </v-card-title>
+            <v-card-text>
+                <v-text-field v-model="newConvName" @keypress.enter="renameConv"></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="primary" text @click="renameConv">
+                    Add
+                </v-btn>
+                <v-btn color="primary" text @click="convDialog = false">
+                    Close
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </template>
 <script>
 import { mapWritableState } from 'pinia';
@@ -33,13 +52,15 @@ import { QAStore } from '@/stores/QA.store';
 export default {
     data: () => ({
         snackbar: false,
+        convDialog: false,
+        newConvName: ""
     }),
     computed: {
         ...mapWritableState(CurrentConvStore, ['conv_id']),
         ...mapWritableState(QAStore, ['QA'])
     },
     props: ["id", "name"],
-    emits:["delete"],
+    emits: ["delete", "update"],
     methods: {
         loadConversation: function (event) {
             console.log(this.id)
@@ -63,6 +84,18 @@ export default {
                 });
             this.snackbar = false
             this.$emit('delete', this.id)
+        },
+        renameConv() {
+            fetch("/api/conversations?conv_id=" + this.id + "&conv_name=" + this.newConvName,
+                {
+                    method: "PUT"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data.message);
+                });
+            this.convDialog = false
+            this.$emit('update', this.id, this.newConvName)
         }
     },
     location: 'end',
