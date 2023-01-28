@@ -15,7 +15,7 @@
         <template v-slot:append>
             <v-divider></v-divider>
             <div class="pa-2">
-                <v-btn block @click="logout">
+                <v-btn block @click="logout" >
                     Se déconnecter
                 </v-btn>
             </div>
@@ -43,7 +43,7 @@
 
 <script>
 import SideBarElements from "./SideBarElements.vue"
-import { mapWritableState } from 'pinia';
+import { mapState, mapWritableState } from 'pinia';
 import { UserStore } from '@/stores/User.store';
 export default {
     data() {
@@ -53,6 +53,7 @@ export default {
             newConvName: ""
         }
     },
+ 
     created() {
         fetch("/api/conversations?user=" + this.user,
             { method: "GET" })
