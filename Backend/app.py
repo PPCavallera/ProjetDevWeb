@@ -1,8 +1,6 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
-<<<<<<< HEAD
-=======
 import transformers
 from transformers import BloomForCausalLM
 from transformers import BloomTokenizerFast
@@ -17,7 +15,6 @@ prompt = ["Travailleurs travailleuses on nous spolie, on nous ment",
 result_length = 120
 
 
->>>>>>> 51c024ced10f14c19cb76640efd8c177baeb99ef
 
 app = Flask(__name__)
 # creates SQLALCHEMY object
